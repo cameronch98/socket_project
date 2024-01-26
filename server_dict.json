@@ -1,0 +1,56 @@
+{
+  "google.com": {
+    "HTTP": {
+      "url": "http://www.google.com",
+      "interval": 50
+    }
+  },
+  "reddit.com": {
+    "TCP": {
+      "port": 80,
+      "interval": 50
+    },
+    "UDP": {
+      "port": 53,
+      "interval": 50
+    }
+  },
+  "time.apple.com": {
+    "NTP": {
+      "server": "time.apple.com",
+      "interval": 50
+    }
+  },
+  "youtube.com": {
+    "DNS": {
+      "dns_server": "8.8.8.8",
+      "query": "youtube.com",
+      "record_types": [
+        "A",
+        "MX",
+        "AAAA",
+        "CNAME"
+      ],
+      "interval": 50
+    },
+    "TCP": {
+      "port": 80,
+      "interval": 50
+    }
+  },
+  "eecs.oregonstate.edu": {
+    "HTTP": {
+      "url": "http://engineering.oregonstate.edu/EECS",
+      "interval": 50
+    },
+    "HTTPS": {
+      "url": "https://engineering.oregonstate.edu/EECS",
+      "interval": 50
+    }
+  },
+  "4.2.2.2": {
+    "ICMP": {
+      "interval": 50
+    }
+  }
+}
