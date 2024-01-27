@@ -5,30 +5,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="557cd6a3-3b58-4f68-9df8-276c1eb914c8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/CS372_socket_project.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/echo_client.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/echo_server.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/network_monitor.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/network_monitoring_examples.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/protocol_classes.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server_dict.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/echo_client.py" beforeDir="false" afterPath="$PROJECT_DIR$/echo_client.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/echo_server.py" beforeDir="false" afterPath="$PROJECT_DIR$/echo_server.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/network_monitor.py" beforeDir="false" afterPath="$PROJECT_DIR$/network_monitor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/network_monitoring_examples.py" beforeDir="false" afterPath="$PROJECT_DIR$/network_monitoring_examples.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server_dict.json" beforeDir="false" afterPath="$PROJECT_DIR$/server_dict.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 6
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
   <component name="ProjectId" id="2bSfOmH1pnipnFnC0likmMG1ciV" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -44,6 +45,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
+    "last_opened_file_path": "/home/cameron/Desktop/CS372_socket_project",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -52,6 +54,11 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -67,7 +74,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1706213370671</updated>
-      <workItem from="1706213372010" duration="27635000" />
+      <workItem from="1706213372010" duration="27834000" />
+      <workItem from="1706296261182" duration="31266000" />
     </task>
     <servers />
   </component>

@@ -1,11 +1,19 @@
+import datetime
 import json
+import os
 import threading
 import time
+import shutil
+import keyboard
+# from rich import print
+from rich.console import Console
 from network_monitoring_examples import *
 from typing import Callable, Union
 from prompt_toolkit import PromptSession
 from prompt_toolkit.completion import WordCompleter
 from prompt_toolkit.patch_stdout import patch_stdout
+
+console = Console()
 
 
 def show_commands():
@@ -13,14 +21,17 @@ def show_commands():
     Show available commands
     :return: None
     """
-    print("Commands:")
-    print("  add - Add a new server to monitor")
-    print("  edit - Edit an existing server")
-    print("  delete - Delete an existing server")
-    print("  show-servers - Show config of all servers")
-    print("  monitor - Monitor a server")
-    print("  monitor-all - Monitor all servers")
-    print("  exit - Exit the application\n")
+    print(" |===========================================|")
+    print(" | Commands:                                 |")
+    print(" |===========================================|")
+    print(" | add - Add a new server to monitor         |")
+    print(" | edit - Edit an existing server            |")
+    print(" | delete - Delete an existing server        |")
+    print(" | show-servers - Show config of all servers |")
+    print(" | monitor - Monitor a server                |")
+    print(" | monitor-all - Monitor all servers         |")
+    print(" | exit - Exit the application               |")
+    print(" |===========================================|\n")
 
 
 def show_services(services):
@@ -37,24 +48,37 @@ def show_services(services):
     print("")
 
 
+def show_record_types():
+    """
+    Show dns record types
+    :return: None
+    """
+    print("Record-Types:")
+    print("  A - IPv4 Address")
+    print("  MX - Mail Exchange")
+    print("  AAAA - IPv6 Address")
+    print("  CNAME - Canonical Name")
+    print("  Other - Manual Entry")
+    print("  Press Enter to Stop\n")
+
+
 def show_server_configs(server_dict):
     """
     Show current servers and services they are
     registered to monitor.
     :return: None
     """
-    print("")
     for server in server_dict:
-        print(f"Server: {server}")
+        print(f"\nServer: {server}")
         print(f"Services: {', '.join(server_dict[server].keys())}")
-        print("")
 
 
-def icmp_service_check(server_dict, server, event):
+def icmp_service_check(server_dict, server, lock, event):
     """
     Runs icmp service check on timer set by interval variable
     :param server_dict: dictionary with server and service information
     :param server: server the program is currently monitoring
+    :param lock: thread lock to prevent overlapping output
     :param event: event to trigger killing thread
     :return: None
     """
@@ -64,32 +88,40 @@ def icmp_service_check(server_dict, server, event):
     # Loop until thread event is set
     while not event.is_set():
 
-        # Header
-        print("\nICMP Service Check")
-        print("--------------------------------------------------------------------")
+        # Set lock
+        lock.acquire()
+        try:
+            # Header
+            console.log("ICMP Service Check")
+            console.log("===================================================================================================")
 
-        # Ping Test
-        print("Ping Test:")
-        ping_addr, ping_time = ping(server)
-        if ping_addr and ping_time:
-            print(f"{server} (ping): {ping_addr[0]} - {ping_time:.2f} ms")
-        else:
-            print(f"{server} (ping): Request timed out or no reply received")
+            # Ping Test
+            console.log("Ping Test:")
+            ping_addr, ping_time = ping(server)
+            if ping_addr and ping_time:
+                console.log(f"{server} (ping): {ping_addr[0]} - {ping_time:.2f} ms")
+            else:
+                console.log(f"{server} (ping): Request timed out or no reply received")
 
-        # Traceroute Test
-        print("\nTraceroute Test:")
-        print(f"{server} (traceroute):")
-        print(traceroute(server))
+            # Traceroute Test
+            console.log("\nTraceroute Test:")
+            console.log(f"{server} (traceroute):")
+            console.log(traceroute(server))
+
+        finally:
+            # Release lock
+            lock.release()
 
         # Sleep the loop for the given interval
         event.wait(interval)
 
 
-def http_service_check(server_dict, server, event):
+def http_service_check(server_dict, server, lock, event):
     """
     Runs http service check on timer set by interval variable
     :param server_dict: dictionary with server and service information
     :param server: server the program is currently monitoring
+    :param lock: thread lock to prevent overlapping output
     :param event: event to trigger killing thread
     :return: None
     """
@@ -100,24 +132,32 @@ def http_service_check(server_dict, server, event):
     # Loop until thread event is set
     while not event.is_set():
 
-        # Header
-        print("\nHTTP Service Check")
-        print("--------------------------------------------------------------------")
+        # Set lock
+        lock.acquire()
+        try:
+            # Header
+            print(f"\n[{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] HTTP Service Check")
+            print("===================================================================================================")
 
-        # HTTP Request
-        print(f"Sending HTTP Request to {server} ... ")
-        http_server_status, http_server_response_code = check_server_http(http_url)
-        print(f"HTTP URL: {http_url}, HTTP server status: {http_server_status}, Status Code: {http_server_response_code if http_server_response_code is not None else 'N/A'}")
+            # HTTP Request
+            print(f"Sending HTTP Request to {server} ... ")
+            http_server_status, http_server_response_code = check_server_http(http_url)
+            print(f"HTTP URL: {http_url}, HTTP server status: {http_server_status}, Status Code: {http_server_response_code if http_server_response_code is not None else 'N/A'}")
+
+        finally:
+            # Release lock
+            lock.release()
 
         # Sleep the loop for the given interval
         event.wait(interval)
 
 
-def https_service_check(server_dict, server, event):
+def https_service_check(server_dict, server, lock, event):
     """
     Runs https service check on timer set by interval variable
     :param server_dict: dictionary with server and service information
     :param server: server the program is currently monitoring
+    :param lock: thread lock to prevent overlapping output
     :param event: event to trigger killing thread
     :return: None
     """
@@ -127,24 +167,33 @@ def https_service_check(server_dict, server, event):
 
     # Loop until thread event is set
     while not event.is_set():
-        # Header
-        print("\nHTTPS Service Check")
-        print("--------------------------------------------------------------------")
 
-        # HTTP Request
-        print(f"Sending HTTPS Request to {server} ... ")
-        https_server_status, https_server_response_code, description = check_server_https(https_url)
-        print(f"HTTP URL: {https_url}, HTTP server status: {https_server_status}, Status Code: {https_server_response_code if https_server_response_code is not None else 'N/A'}, Description: {description}")
+        # Set lock
+        lock.acquire()
+        try:
+            # Header
+            print(f"\n[{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] HTTPS Service Check")
+            print("===================================================================================================")
+
+            # HTTP Request
+            print(f"Sending HTTPS Request to {server} ... ")
+            https_server_status, https_server_response_code, description = check_server_https(https_url)
+            print(f"HTTP URL: {https_url}, HTTP server status: {https_server_status}, Status Code: {https_server_response_code if https_server_response_code is not None else 'N/A'}, Description: {description}")
+
+        finally:
+            # Release lock
+            lock.release()
 
         # Sleep the loop for the given interval
         event.wait(interval)
 
 
-def ntp_service_check(server_dict, server, event):
+def ntp_service_check(server_dict, server, lock, event):
     """
     Runs ntp service check on timer set by interval variable
     :param server_dict: dictionary with server and service information
     :param server: server the program is currently monitoring
+    :param lock: thread lock to prevent overlapping output
     :param event: event to trigger killing thread
     :return: None
     """
@@ -153,24 +202,33 @@ def ntp_service_check(server_dict, server, event):
 
     # Loop until thread event is set
     while not event.is_set():
-        # Header
-        print("\nNTP Service Check")
-        print("--------------------------------------------------------------------")
 
-        # NTP Test
-        print(f"Testing Status of NTP Server {server} ... ")
-        ntp_server_status, ntp_server_time = check_ntp_server(server)
-        print(f"{server} is up. Time: {ntp_server_time}" if ntp_server_status else f"{server} is down.")
+        # Set lock
+        lock.acquire()
+        try:
+            # Header
+            print(f"\n[{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] NTP Service Check")
+            print("===================================================================================================")
+
+            # NTP Test
+            print(f"Testing Status of NTP Server {server} ... ")
+            ntp_server_status, ntp_server_time = check_ntp_server(server)
+            print(f"{server} is up. Time: {ntp_server_time}" if ntp_server_status else f"{server} is down.")
+
+        finally:
+            # Release lock
+            lock.release()
 
         # Sleep the loop for the given interval
         event.wait(interval)
 
 
-def dns_service_check(server_dict, server, event):
+def dns_service_check(server_dict, server, lock, event):
     """
     Runs dns service check on timer set by interval variable
     :param server_dict: dictionary with server and service information
     :param server: server the program is currently monitoring
+    :param lock: thread lock to prevent overlapping output
     :param event: event to trigger killing thread
     :return: None
     """
@@ -183,25 +241,33 @@ def dns_service_check(server_dict, server, event):
     # Loop until thread event is set
     while not event.is_set():
 
-        # Header
-        print("\nDNS Service Check")
-        print("--------------------------------------------------------------------")
+        # Set lock
+        lock.acquire()
+        try:
+            # Header
+            print(f"\n[{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] DNS Service Check")
+            print("===================================================================================================")
 
-        # DNS Test
-        print(f"Querying DNS Server {dns_server} with Server {query} ... ")
-        for dns_record_type in record_types:
-            dns_server_status, dns_query_results = check_dns_server_status(dns_server, query, dns_record_type)
-            print(f"DNS Server: {dns_server}, Status: {dns_server_status}, {dns_record_type} Records Results: {dns_query_results}")
+            # DNS Test
+            print(f"Querying DNS Server {dns_server} with Server {query} ... ")
+            for dns_record_type in record_types:
+                dns_server_status, dns_query_results = check_dns_server_status(dns_server, query, dns_record_type)
+                print(f"DNS Server: {dns_server}, Status: {dns_server_status}, {dns_record_type} Records Results: {dns_query_results}")
+
+        finally:
+            # Release lock
+            lock.release()
 
         # Sleep the loop for the given interval
         event.wait(interval)
 
 
-def tcp_service_check(server_dict, server, event):
+def tcp_service_check(server_dict, server, lock, event):
     """
     Runs tcp service check on timer set by interval variable
     :param server_dict: dictionary with server and service information
     :param server: server the program is currently monitoring
+    :param lock: thread lock to prevent overlapping output
     :param event: event to trigger killing thread
     :return: None
     """
@@ -212,24 +278,32 @@ def tcp_service_check(server_dict, server, event):
     # Loop until thread event is set
     while not event.is_set():
 
-        # Header
-        print("\nTCP Service Check")
-        print("--------------------------------------------------------------------")
+        # Set lock
+        lock.acquire()
+        try:
+            # Header
+            print(f"\n[{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] TCP Service Check")
+            print("===================================================================================================")
 
-        # TCP test
-        print(f"Testing TCP to Server {server} at Port {port} ... ")
-        tcp_port_status, tcp_port_description = check_tcp_port(server, port)
-        print(f"Server: {server}, TCP Port: {port}, TCP Port Status: {tcp_port_status}, Description: {tcp_port_description}")
+            # TCP test
+            print(f"Testing TCP to Server {server} at Port {port} ... ")
+            tcp_port_status, tcp_port_description = check_tcp_port(server, port)
+            print(f"Server: {server}, TCP Port: {port}, TCP Port Status: {tcp_port_status}, Description: {tcp_port_description}")
+
+        finally:
+            # Release lock
+            lock.release()
 
         # Sleep the loop for the given interval
         event.wait(interval)
 
 
-def udp_service_check(server_dict, server, event):
+def udp_service_check(server_dict, server, lock, event):
     """
     Runs tcp service check on timer set by interval variable
     :param server_dict: dictionary with server and service information
     :param server: server the program is currently monitoring
+    :param lock: thread lock to prevent overlapping output
     :param event: event to trigger killing thread
     :return: None
     """
@@ -240,20 +314,62 @@ def udp_service_check(server_dict, server, event):
     # Loop until thread event is set
     while not event.is_set():
 
-        # Header
-        print("\nUDP Service Check")
-        print("--------------------------------------------------------------------")
+        # Set lock
+        lock.acquire()
+        try:
+            # Header
+            print(f"\n[{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] UDP Service Check")
+            print("===================================================================================================")
 
-        # TCP test
-        print(f"Testing UDP to Server {server} at Port {port} ... ")
-        udp_port_status, udp_port_description = check_udp_port(server, port)
-        print(f"Server: {server}, UDP Port: {port}, UDP Port Status: {udp_port_status}, Description: {udp_port_description}")
+            # TCP test
+            print(f"Testing UDP to Server {server} at Port {port} ... ")
+            udp_port_status, udp_port_description = check_udp_port(server, port)
+            print(f"Server: {server}, UDP Port: {port}, UDP Port Status: {udp_port_status}, Description: {udp_port_description}")
+
+        finally:
+            # Release lock
+            lock.release()
 
         # Sleep the loop for the given interval
         event.wait(interval)
 
 
-def initialize_threads(server_dict, server, event, thread_list):
+def local_tcp_service_check(server_dict, server, lock, event):
+    """
+    Runs local tcp service check on timer set by interval variable
+    :param server_dict: dictionary with server and service information
+    :param server: server the program is currently monitoring
+    :param lock: thread lock to prevent overlapping output
+    :param event: event to trigger killing thread
+    :return: None
+    """
+    # Extract variables
+    interval = server_dict[server]["LOCAL TCP"]["interval"]
+    port = server_dict[server]["LOCAL TCP"]["port"]
+
+    # Loop until thread event is set
+    while not event.is_set():
+
+        # Set lock
+        lock.acquire()
+        try:
+            # Header
+            print(f"\n[{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Local TCP Service Check")
+            print("===================================================================================================")
+
+            # TCP test
+            print(f"Testing TCP to Local Server {server} at Port {port} ... ")
+            local_tcp_echo(server, port)
+
+        finally:
+            # Release lock
+            lock.release()
+
+        # Sleep the loop for the given interval
+        event.wait(interval)
+
+
+def initialize_threads(server_dict, server, lock, event, thread_list):
     """
     Initializes necessary threads for the service checks of a particular server
     :param server_dict: dictionary with server and service information
@@ -267,53 +383,51 @@ def initialize_threads(server_dict, server, event, thread_list):
 
     # Start icmp service check thread and add to list
     if 'ICMP' in service_checks:
-        icmp_thread = threading.Thread(target=icmp_service_check, args=(server_dict, server, event))
+        icmp_thread = threading.Thread(target=icmp_service_check, args=(server_dict, server, lock, event))
         icmp_thread.start()
         thread_list.append(icmp_thread)
-        time.sleep(3)  # Give time before next check starts
 
     # Start http service check thread and add to list
     if 'HTTP' in service_checks:
-        http_thread = threading.Thread(target=http_service_check, args=(server_dict, server, event))
+        http_thread = threading.Thread(target=http_service_check, args=(server_dict, server, lock, event))
         http_thread.start()
         thread_list.append(http_thread)
-        time.sleep(3)  # Give time before next check starts
 
     # Start https service check thread and add to list
     if 'HTTPS' in service_checks:
-        https_thread = threading.Thread(target=https_service_check,
-                                        args=(server_dict, server, event))
+        https_thread = threading.Thread(target=https_service_check, args=(server_dict, server, lock, event))
         https_thread.start()
         thread_list.append(https_thread)
-        time.sleep(3)  # Give time before next check starts
 
     # Start ntp service check thread and add to list
     if 'NTP' in service_checks:
-        ntp_thread = threading.Thread(target=ntp_service_check, args=(server_dict, server, event))
+        ntp_thread = threading.Thread(target=ntp_service_check, args=(server_dict, server, lock, event))
         ntp_thread.start()
         thread_list.append(ntp_thread)
-        time.sleep(3)  # Give time before next check starts
 
     # Start dns service check thread and add to list
     if 'DNS' in service_checks:
-        dns_thread = threading.Thread(target=dns_service_check, args=(server_dict, server, event))
+        dns_thread = threading.Thread(target=dns_service_check, args=(server_dict, server, lock, event))
         dns_thread.start()
         thread_list.append(dns_thread)
-        time.sleep(3)  # Give time before next check starts
 
     # Start tcp service check thread and add to list
     if 'TCP' in service_checks:
-        tcp_thread = threading.Thread(target=tcp_service_check, args=(server_dict, server, event))
+        tcp_thread = threading.Thread(target=tcp_service_check, args=(server_dict, server, lock, event))
         tcp_thread.start()
         thread_list.append(tcp_thread)
-        time.sleep(3)  # Give time before next check starts
 
     # Start udp service check thread and add to list
     if 'UDP' in service_checks:
-        udp_thread = threading.Thread(target=udp_service_check, args=(server_dict, server, event))
+        udp_thread = threading.Thread(target=udp_service_check, args=(server_dict, server, lock, event))
         udp_thread.start()
         thread_list.append(udp_thread)
-        time.sleep(3)  # Give time before next check starts
+
+    # Start udp service check thread and add to list
+    if 'LOCAL TCP' in service_checks:
+        local_tcp_thread = threading.Thread(target=local_tcp_service_check, args=(server_dict, server, lock, event))
+        local_tcp_thread.start()
+        thread_list.append(local_tcp_thread)
 
 
 # Main function
@@ -327,7 +441,6 @@ def main() -> None:
     general_prompt: PromptSession = PromptSession()
 
     # Command completer for auto-completion
-    # This is where you will add new auto-complete commands
     commands = ['add', 'edit', 'delete', 'show-servers', 'monitor', 'monitor-all', 'exit']
     command_completer: WordCompleter = WordCompleter(commands, ignore_case=True)
 
@@ -335,15 +448,51 @@ def main() -> None:
     command_prompt: PromptSession = PromptSession(completer=command_completer)
 
     # Service completer for auto-completion
-    # This is where you will add new auto-complete services
-    services = ['ICMP', 'HTTP', 'HTTPS', 'NTP', 'DNS', 'TCP', 'UDP']
+    services = ['ICMP', 'HTTP', 'HTTPS', 'NTP', 'DNS', 'TCP', 'UDP', 'LOCAL TCP']
     service_completer: WordCompleter = WordCompleter(services, ignore_case=True)
 
     # Create a service prompt session
     service_prompt: PromptSession = PromptSession(completer=service_completer)
 
-    # Variable to control the main loop
-    is_running: bool = True
+    # Record type completer for auto-completion
+    record_types = ['A', 'MX', 'AAAA', 'CNAME']
+    record_type_completer: WordCompleter = WordCompleter(record_types, ignore_case=True)
+
+    # Create a record type prompt session
+    record_type_prompt: PromptSession = PromptSession(completer=record_type_completer)
+
+    # Get terminal size
+    columns, lines = shutil.get_terminal_size()
+    print("\n")
+
+    # Print project title
+    print("   ██████╗ █████╗ ███╗   ███╗ ██████╗ █████╗ ███████╗████████╗".center(columns))
+    print("  ██╔════╝██╔══██╗████╗ ████║██╔════╝██╔══██╗██╔════╝╚══██╔══╝".center(columns))
+    print("██║     ███████║██╔████╔██║██║     ███████║███████╗   ██║".center(columns))
+    print("██║     ██╔══██║██║╚██╔╝██║██║     ██╔══██║╚════██║   ██║".center(columns))
+    print("╚██████╗██║  ██║██║ ╚═╝ ██║╚██████╗██║  ██║███████║   ██║".center(columns))
+    print(" ╚═════╝╚═╝  ╚═╝╚═╝     ╚═╝ ╚═════╝╚═╝  ╚═╝╚══════╝   ╚═╝\n".center(columns))
+    title_string = "Network Monitoring Tool"
+    print(title_string.center(columns))
+    author_string = "by Cameron Hester"
+    print(author_string.center(columns))
+    print("\n")
+
+    # Prompt user to start program
+    start_string = "Press any key to continue ..."
+    print(start_string.center(columns))
+
+    # Sleep to prevent auto enter
+    time.sleep(1)
+
+    # Start program upon keypress
+    if keyboard.read_key():
+
+        # Clear terminal
+        os.system('clear')
+
+        # Start the main loop
+        is_running: bool = True
 
     try:
         with patch_stdout():
@@ -392,7 +541,7 @@ def main() -> None:
                         print("")
 
                         # Get/set icmp specific parameters
-                        if service == "ICMP":
+                        if service == "ICMP" or service == "NTP":
                             print("Please enter the requested parameters: ")
                             interval = int(general_prompt.prompt("Test Interval (in seconds): "))
                             server_dict[server][service] = {'interval': interval}
@@ -411,36 +560,33 @@ def main() -> None:
                             interval = int(general_prompt.prompt("Test Interval (in seconds): "))
                             server_dict[server][service] = {'url': f"https://{url}", 'interval': interval}
 
-                        # Get/set ntp specific parameters
-                        elif service == "NTP":
-                            print("Please enter the requested parameters: ")
-                            interval = int(general_prompt.prompt("Test Interval (in seconds): "))
-                            server_dict[server][service] = {'server': server, 'interval': interval}
-
                         # Get dns specific parameters
                         elif service == "DNS":
+
+                            # Get DNS server and query domain
                             print("Please enter the requested parameters: ")
                             dns_server = general_prompt.prompt("DNS Server: ")
                             query = input("Query Domain: ")
-                            print("Enter record types to test (enter empty input when finished): ")
+
+                            # Get list of record types user wants to check
+                            print("Enter record types to test: \n")
+                            show_record_types()
                             record_type_list = []
-                            record_type = general_prompt.prompt("Record Type: ")
+                            record_type = record_type_prompt.prompt("Record Type: \n")
                             while record_type != "":
                                 record_type_list.append(record_type)
-                                record_type = general_prompt.prompt("Record Type: ")
+                                show_record_types()
+                                record_type = record_type_prompt.prompt("Record Type: \n")
+
+                            # Get interval
                             interval = int(general_prompt.prompt("Test Interval (in seconds): "))
+
+                            # Set values in dict
                             server_dict[server][service] = {'dns_server': dns_server, 'query': query,
                                                             'record_types': record_type_list, 'interval': interval}
 
-                        # Get tcp specific parameters
-                        elif service == "TCP":
-                            print("Please enter the requested parameters: ")
-                            port = int(general_prompt.prompt("Target Port: "))
-                            interval = int(general_prompt.prompt("Test Interval (in seconds): "))
-                            server_dict[server][service] = {'port': port, 'interval': interval}
-
-                        # Get udp specific parameters
-                        elif service == "UDP":
+                        # Get tcp, udp, or local tcp specific parameters
+                        elif service == "TCP" or service == "UDP" or service == "LOCAL TCP":
                             print("Please enter the requested parameters: ")
                             port = int(general_prompt.prompt("Target Port: "))
                             interval = int(general_prompt.prompt("Test Interval (in seconds): "))
@@ -452,9 +598,10 @@ def main() -> None:
 
                         # Ask if another service should be added - exit loop and update json file if not
                         if general_prompt.prompt("Would you like to add another service? (y/n): ").lower() != "y":
+
                             # Stop loop and print separator
                             adding_services = False
-                            print("--------------------------------------------------------------------")
+                            print("===================================================================================================")
 
                             # Persist server/service to JSON file
                             with open('server_dict.json', 'r+') as file:
@@ -464,6 +611,9 @@ def main() -> None:
                                 file.truncate()
                                 file.write(json.dumps(server_dict))
 
+                if command == "edit":
+                    None
+
                 if command == "show-servers":
 
                     # Show the server configs
@@ -471,7 +621,7 @@ def main() -> None:
 
                     # Go back home when user presses enter
                     if general_prompt.prompt("Press enter to go back to home: ") == "":
-                        print("\n--------------------------------------------------------------------")
+                        print("===================================================================================================")
 
                 if command == "monitor":
 
@@ -490,7 +640,7 @@ def main() -> None:
                     show_server_configs(server_dict)
 
                     # Prompt for server and validate
-                    server: str = server_prompt.prompt("Server: ")
+                    server: str = server_prompt.prompt("\nServer: ")
                     while server not in servers:
                         print("That is not a valid server!")
                         show_server_configs(server_dict)
@@ -500,8 +650,11 @@ def main() -> None:
                     event = threading.Event()
                     thread_list = []
 
+                    # Initialize thread lock to prevent overlapping outputs
+                    lock = threading.Lock()
+
                     # Initialize proper threads for service checks of the current server
-                    initialize_threads(server_dict, server, event, thread_list)
+                    initialize_threads(server_dict, server, lock, event, thread_list)
 
                     # Quit service checks when user presses enter
                     if general_prompt.prompt("\nPress enter to quit monitoring: ") == "":
@@ -513,7 +666,7 @@ def main() -> None:
                         for thread in thread_list:
                             thread.join()
 
-                        print("\n--------------------------------------------------------------------")
+                        print("===================================================================================================")
 
                 if command == "monitor-all":
 
@@ -524,14 +677,17 @@ def main() -> None:
                     event = threading.Event()
                     thread_list = []
 
+                    # Initialize thread lock to prevent overlapping outputs
+                    lock = threading.Lock()
+
                     # Start service_checks for all services
                     for server in server_dict:
 
                         # Initialize proper threads for service checks of current server
-                        initialize_threads(server_dict, server, event, thread_list)
+                        initialize_threads(server_dict, server, lock, event, thread_list)
 
-                        # Give a time buffer between thread initializations
-                        time.sleep(2)
+                        # # Give a time buffer between thread initializations
+                        # time.sleep(2)
 
                     # Quit service checks when user presses enter
                     if general_prompt.prompt("\nPress enter to quit monitoring: ") == "":
@@ -543,13 +699,13 @@ def main() -> None:
                         for thread in thread_list:
                             thread.join()
 
-                        print("\n--------------------------------------------------------------------")
+                        print("===================================================================================================")
 
                 if command == "exit":
-                    print("\nThank you for using CamCast! Goodbye.")
                     is_running = False
+
     finally:
-        print("Closing")
+        print("\nThank you for using CamCast! Goodbye.")
 
 
 if __name__ == '__main__':

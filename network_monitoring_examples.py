@@ -2,7 +2,7 @@
 # pip install requests
 # pip install ntplib
 # pip install dnspython
-
+import datetime
 import os
 import socket
 import struct
@@ -15,6 +15,7 @@ import requests
 import ntplib
 import dns.resolver
 import dns.exception
+import lorem
 from socket import gaierror
 from time import ctime
 from typing import Tuple, Optional, Any
@@ -448,6 +449,66 @@ def check_udp_port(ip_address: str, port: int, timeout: int = 3) -> (bool, str):
     except Exception as e:
         # Catch any other exceptions and return a general failure message along with the exception raised.
         return False, f"Failed to check UDP port {port} on {ip_address} due to an error: {e}"
+
+
+def local_tcp_echo(ip_address: str, port: int) -> (bool, str):
+    """
+    Adapted from check_tcp_status to test functionality of local TCP server.
+
+    Args:
+    ip_address (str): The IP address of the target server.
+    port (int): The TCP port number to check.
+
+    Returns: None
+
+    Description:
+    Checks the status of a specific TCP port on a given IP address. Then, sends message with a pair of random integers
+    from 1 to 100 for the server to perform addition on. The server should send the result back to the client, allowing
+    for easy verification of functionality.
+    """
+
+    try:
+        # Create a socket object using the AF_INET address family (IPv4) and SOCK_STREAM socket type (TCP).
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            # Set a timeout for the socket to avoid waiting indefinitely.
+            s.settimeout(3)
+
+            # Attempt to connect to the specified IP address and port.
+            # If the connection is successful, the port is open.
+            s.connect((ip_address, port))
+            print(f"Port {port} on {ip_address} is open.")
+
+            # Test a small random number of messages
+            for _ in range(random.randint(1, 3)):
+
+                # Get a random lorem ipsum sentence
+                message = lorem.sentence()
+
+                # Send message
+                print(f"\nSending echo request message: {message}")
+                s.sendall(message.encode())
+
+                # Receive message
+                reply = s.recv(1024).decode()
+                print(f"Received echo reply message: {reply}")
+
+                # Short sleep
+                time.sleep(1)
+
+            # Send termination message
+            s.sendall("Goodbye".encode())
+
+    except socket.timeout:
+        # Connection attempt took too long; port might be filtered or the server is slow to respond.
+        print(f"Port {port} on {ip_address} timed out.")
+
+    except socket.error:
+        # If a socket error occurs, it generally means the port is closed or not reachable.
+        print(f"Port {port} on {ip_address} is closed or not reachable.")
+
+    except Exception as e:
+        # Catch any other exceptions and return a general failure message along with the exception raised.
+        print(f"Failed to check port {port} on {ip_address} due to an error: {e}")
 
 
 # # Ping Usage Example
