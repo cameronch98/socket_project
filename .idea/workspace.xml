@@ -5,12 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="557cd6a3-3b58-4f68-9df8-276c1eb914c8" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/prompts.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/service_checks.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/echo_client.py" beforeDir="false" afterPath="$PROJECT_DIR$/echo_client.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/echo_server.py" beforeDir="false" afterPath="$PROJECT_DIR$/echo_server.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/network_monitor.py" beforeDir="false" afterPath="$PROJECT_DIR$/network_monitor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/network_monitoring_examples.py" beforeDir="false" afterPath="$PROJECT_DIR$/network_monitoring_examples.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server_dict.json" beforeDir="false" afterPath="$PROJECT_DIR$/server_dict.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/protocol_classes.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,22 +37,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "Python.network_monitor.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "/home/cameron/Desktop/CS372_socket_project",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;Python.network_monitor.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/cameron/Desktop/CS372_socket_project&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
@@ -75,7 +74,8 @@
       <option name="presentableId" value="Default" />
       <updated>1706213370671</updated>
       <workItem from="1706213372010" duration="27834000" />
-      <workItem from="1706296261182" duration="31266000" />
+      <workItem from="1706296261182" duration="31322000" />
+      <workItem from="1706385491207" duration="15170000" />
     </task>
     <servers />
   </component>
