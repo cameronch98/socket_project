@@ -1,4 +1,6 @@
 import shutil
+from datetime import datetime
+
 from network_monitoring_examples import *
 
 
@@ -12,6 +14,12 @@ def icmp_service_check(server_dict, server, lock, event):
     :return: None
     """
     # Extract variables
+    ttl = server_dict[server]["ICMP"]['ttl']
+    timeout = server_dict[server]["ICMP"]['timeout']
+    sequence_number = server_dict[server]["ICMP"]['sequence_number']
+    max_hops = server_dict[server]["ICMP"]['max_hops']
+    pings_per_hop = server_dict[server]["ICMP"]['pings_per_hop']
+    verbose = server_dict[server]["ICMP"]['verbose']
     interval = server_dict[server]["ICMP"]["interval"]
 
     # Loop until thread event is set
@@ -22,12 +30,12 @@ def icmp_service_check(server_dict, server, lock, event):
         try:
             # Header
             columns, lines = shutil.get_terminal_size()
-            print(f"\n[{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] ICMP Service Check")
+            print(f"\n[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] ICMP Service Check")
             print("=" * columns)
 
             # Ping Test
             print("Ping Test:")
-            ping_addr, ping_time = ping(server)
+            ping_addr, ping_time = ping(server, ttl, timeout, sequence_number)
             if ping_addr and ping_time:
                 print(f"{server} (ping): {ping_addr[0]} - {ping_time:.2f} ms")
             else:
@@ -36,7 +44,7 @@ def icmp_service_check(server_dict, server, lock, event):
             # Traceroute Test
             print("\nTraceroute Test:")
             print(f"{server} (traceroute):")
-            print(traceroute(server))
+            print(traceroute(server, max_hops, pings_per_hop, verbose))
 
         finally:
             # Release lock
@@ -56,8 +64,8 @@ def http_service_check(server_dict, server, lock, event):
     :return: None
     """
     # Extract variables
-    interval = server_dict[server]["HTTP"]["interval"]
     http_url = server_dict[server]["HTTP"]["url"]
+    interval = server_dict[server]["HTTP"]["interval"]
 
     # Loop until thread event is set
     while not event.is_set():
@@ -67,7 +75,7 @@ def http_service_check(server_dict, server, lock, event):
         try:
             # Header
             columns, lines = shutil.get_terminal_size()
-            print(f"\n[{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] HTTP Service Check")
+            print(f"\n[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] HTTP Service Check")
             print("=" * columns)
 
             # HTTP Request
@@ -93,8 +101,9 @@ def https_service_check(server_dict, server, lock, event):
     :return: None
     """
     # Extract variables
-    interval = server_dict[server]["HTTPS"]["interval"]
     https_url = server_dict[server]["HTTPS"]["url"]
+    timeout = server_dict[server]["HTTPS"]["timeout"]
+    interval = server_dict[server]["HTTPS"]["interval"]
 
     # Loop until thread event is set
     while not event.is_set():
@@ -104,12 +113,12 @@ def https_service_check(server_dict, server, lock, event):
         try:
             # Header
             columns, lines = shutil.get_terminal_size()
-            print(f"\n[{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] HTTPS Service Check")
+            print(f"\n[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] HTTPS Service Check")
             print("=" * columns)
 
             # HTTP Request
             print(f"Sending HTTPS Request to {server} ... ")
-            https_server_status, https_server_response_code, description = check_server_https(https_url)
+            https_server_status, https_server_response_code, description = check_server_https(https_url, timeout)
             print(f"HTTP URL: {https_url}, HTTP server status: {https_server_status}, Status Code: {https_server_response_code if https_server_response_code is not None else 'N/A'}, Description: {description}")
 
         finally:
@@ -140,7 +149,7 @@ def ntp_service_check(server_dict, server, lock, event):
         try:
             # Header
             columns, lines = shutil.get_terminal_size()
-            print(f"\n[{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] NTP Service Check")
+            print(f"\n[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] NTP Service Check")
             print("=" * columns)
 
             # NTP Test
@@ -166,10 +175,10 @@ def dns_service_check(server_dict, server, lock, event):
     :return: None
     """
     # Extract variables
-    interval = server_dict[server]["DNS"]["interval"]
     dns_server = server_dict[server]["DNS"]["dns_server"]
     query = server_dict[server]["DNS"]["query"]
     record_types = server_dict[server]["DNS"]["record_types"]
+    interval = server_dict[server]["DNS"]["interval"]
 
     # Loop until thread event is set
     while not event.is_set():
@@ -179,7 +188,7 @@ def dns_service_check(server_dict, server, lock, event):
         try:
             # Header
             columns, lines = shutil.get_terminal_size()
-            print(f"\n[{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] DNS Service Check")
+            print(f"\n[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] DNS Service Check")
             print("=" * columns)
 
             # DNS Test
@@ -206,8 +215,8 @@ def tcp_service_check(server_dict, server, lock, event):
     :return: None
     """
     # Extract variables
-    interval = server_dict[server]["TCP"]["interval"]
     port = server_dict[server]["TCP"]["port"]
+    interval = server_dict[server]["TCP"]["interval"]
 
     # Loop until thread event is set
     while not event.is_set():
@@ -217,7 +226,7 @@ def tcp_service_check(server_dict, server, lock, event):
         try:
             # Header
             columns, lines = shutil.get_terminal_size()
-            print(f"\n[{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] TCP Service Check")
+            print(f"\n[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] TCP Service Check")
             print("=" * columns)
 
             # TCP test
@@ -243,8 +252,9 @@ def udp_service_check(server_dict, server, lock, event):
     :return: None
     """
     # Extract variables
-    interval = server_dict[server]["UDP"]["interval"]
     port = server_dict[server]["UDP"]["port"]
+    timeout = server_dict[server]["UDP"]["timeout"]
+    interval = server_dict[server]["UDP"]["interval"]
 
     # Loop until thread event is set
     while not event.is_set():
@@ -254,7 +264,7 @@ def udp_service_check(server_dict, server, lock, event):
         try:
             # Header
             columns, lines = shutil.get_terminal_size()
-            print(f"\n[{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] UDP Service Check")
+            print(f"\n[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] UDP Service Check")
             print("=" * columns)
 
             # TCP test
@@ -291,7 +301,7 @@ def local_tcp_service_check(server_dict, server, lock, event):
         try:
             # Header
             columns, lines = shutil.get_terminal_size()
-            print(f"\n[{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Local TCP Service Check")
+            print(f"\n[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Local TCP Service Check")
             print("=" * columns)
 
             # TCP test

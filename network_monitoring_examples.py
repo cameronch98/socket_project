@@ -2,23 +2,22 @@
 # pip install requests
 # pip install ntplib
 # pip install dnspython
-import datetime
 import os
+import random
 import socket
+import string
 import struct
 import threading
 import time
 import zlib
-import random
-import string
-import requests
-import ntplib
-import dns.resolver
-import dns.exception
-import lorem
 from socket import gaierror
 from time import ctime
 from typing import Tuple, Optional, Any
+import dns.resolver
+import dns.exception
+import lorem
+import ntplib
+import requests
 
 
 def calculate_icmp_checksum(data: bytes) -> int:
