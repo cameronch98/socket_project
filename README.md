@@ -3,13 +3,9 @@
 ![intro_screen.png](readme_images/intro_screen.png)
 A network monitoring tool for monitoring the status of user-entered servers. The application handles the service checks automatically, monitoring ICMP, HTTP, HTTPS, NTP, DNS, TCP, and UDP on user-defined intervals.
 
----
-
 ## Setup
 
 Put set up here
-
----
 
 ## Usage
 
