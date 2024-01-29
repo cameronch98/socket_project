@@ -5,6 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="557cd6a3-3b58-4f68-9df8-276c1eb914c8" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/readme_images/add_server.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/readme_images/delete_server.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/readme_images/echo_application.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/readme_images/echo_application_server.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/readme_images/echo_client.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/readme_images/echo_client_server.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/readme_images/edit_server.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/readme_images/monitor_all_servers.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/readme_images/monitor_server.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/readme_images/show_servers.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -79,7 +91,7 @@
       <workItem from="1706213372010" duration="27834000" />
       <workItem from="1706296261182" duration="31322000" />
       <workItem from="1706385491207" duration="41929000" />
-      <workItem from="1706477913678" duration="15135000" />
+      <workItem from="1706477913678" duration="16223000" />
     </task>
     <servers />
   </component>
