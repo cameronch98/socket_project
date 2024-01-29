@@ -252,21 +252,21 @@ def main() -> None:
     print("")
 
     # Print project title
-    print(r" _   _      _    ____                ".center(columns))
-    print(r"| \ | | ___| |_ / ___|__ _ _ __ ___  ".center(columns))
-    print(r"|  \| |/ _ \ __| |   / _` | '_ ` _ \ ".center(columns))
-    print(r"| |\  |  __/ |_| |__| (_| | | | | | |".center(columns))
-    print(r"|_| \_|\___|\__|\____\__,_|_| |_| |_|".center(columns))
+    print(r" _   _      _    ____                ".center(columns - 1))
+    print(r"| \ | | ___| |_ / ___|__ _ _ __ ___  ".center(columns - 1))
+    print(r"|  \| |/ _ \ __| |   / _` | '_ ` _ \ ".center(columns - 1))
+    print(r"| |\  |  __/ |_| |__| (_| | | | | | |".center(columns - 1))
+    print(r"|_| \_|\___|\__|\____\__,_|_| |_| |_|".center(columns - 1))
     print("")
     title_string = "Network Monitoring Tool"
-    print(title_string.center(columns))
+    print(title_string.center(columns - 1))
     author_string = "by Cameron Hester"
-    print(author_string.center(columns))
+    print(author_string.center(columns - 1))
     print("\n")
 
     # Prompt user to start program
     start_string = "Press enter to begin ..."
-    print(start_string.center(columns))
+    print(start_string.center(columns - 1))
 
     # Sleep to prevent auto enter
     time.sleep(1)
