@@ -70,9 +70,9 @@ The program is also packaged with an echo server and echo client that can be use
 
 #### Echo Client to Echo Server
 
-- The echo client and echo server may be started up in their own processes and tested interactively.
-  - The echo client will send an echo request message and display the message sent and (hopefully, if successful) the message received back from the echo server. 
-  - Multiple messages can be echoed in the same TCP connection if you wish, just send the message "Goodbye" to close the connection.
+The echo client and echo server may be started up in their own processes and tested interactively.
+- The echo client will send an echo request message and display the message sent and (hopefully, if successful) the message received back from the echo server. 
+- Multiple messages can be echoed in the same TCP connection if you wish, just send the message "Goodbye" to close the connection.
 
 ##### Echo Client Side
 
@@ -84,11 +84,11 @@ The program is also packaged with an echo server and echo client that can be use
 
 #### Application to Echo Server
 
-- The echo server may be added via the add-server command and set to utilize the local TCP service.
-  - Use IP address 127.0.0.1 and port 12345 during setup.
-  - The program will automatically generate a lorem ipsum sentence and send that to the echo server to echo back. 
-  - Status information and the message being sent and received will be displayed.
-  - The service-check will run automatically on the interval you defined during server setup.
+The echo server may be added via the add-server command and set to utilize the local TCP service.
+- Use IP address 127.0.0.1 and port 12345 during setup.
+- The program will automatically generate a lorem ipsum sentence and send that to the echo server to echo back. 
+- Status information and the message being sent and received will be displayed.
+- The service-check will run automatically on the interval you defined during server setup.
 
 ##### Application Side
 
