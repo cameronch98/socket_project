@@ -1,7 +1,6 @@
 import shutil
 from datetime import datetime
-
-from network_monitoring_examples import *
+from network_tests import *
 
 
 def icmp_service_check(server_dict, server, lock, event):
@@ -269,7 +268,7 @@ def udp_service_check(server_dict, server, lock, event):
 
             # TCP test
             print(f"Testing UDP to Server {server} at Port {port} ... ")
-            udp_port_status, udp_port_description = check_udp_port(server, port)
+            udp_port_status, udp_port_description = check_udp_port(server, port, timeout)
             print(f"Server: {server}, UDP Port: {port}, UDP Port Status: {udp_port_status}, Description: {udp_port_description}")
 
         finally:

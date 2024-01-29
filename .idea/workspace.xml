@@ -5,20 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="557cd6a3-3b58-4f68-9df8-276c1eb914c8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/service_check_class_drafts/dns_class.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/service_check_class_drafts/http_class.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/service_check_class_drafts/https_class.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/service_check_class_drafts/icmp_class.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/service_check_class_drafts/ntp_class.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/service_check_class_drafts/server_class.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/service_check_class_drafts/tcp_class.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/service_check_class_drafts/udp_class.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/readme_images/home_screen.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/readme_images/intro_screen.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/echo_client.py" beforeDir="false" afterPath="$PROJECT_DIR$/echo_client.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/echo_server.py" beforeDir="false" afterPath="$PROJECT_DIR$/echo_server.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/network_monitor.py" beforeDir="false" afterPath="$PROJECT_DIR$/network_monitor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/network_monitoring_examples.py" beforeDir="false" afterPath="$PROJECT_DIR$/network_monitoring_examples.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/prompts.py" beforeDir="false" afterPath="$PROJECT_DIR$/prompts.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/network_monitoring_examples.py" beforeDir="false" afterPath="$PROJECT_DIR$/network_tests.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server_dict.json" beforeDir="false" afterPath="$PROJECT_DIR$/server_dict.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service_check_class_drafts/dns_class.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/service_check_class_drafts/http_class.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/service_check_class_drafts/https_class.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/service_check_class_drafts/icmp_class.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/service_check_class_drafts/ntp_class.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/service_check_class_drafts/server_class.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/service_check_class_drafts/tcp_class.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/service_check_class_drafts/udp_class.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/service_checks.py" beforeDir="false" afterPath="$PROJECT_DIR$/service_checks.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -35,6 +39,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
@@ -68,6 +75,7 @@
       <recent name="$PROJECT_DIR$" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/readme_images" />
       <recent name="$PROJECT_DIR$/service_check_class_drafts" />
     </key>
   </component>
@@ -88,7 +96,8 @@
       <updated>1706213370671</updated>
       <workItem from="1706213372010" duration="27834000" />
       <workItem from="1706296261182" duration="31322000" />
-      <workItem from="1706385491207" duration="41521000" />
+      <workItem from="1706385491207" duration="41929000" />
+      <workItem from="1706477913678" duration="15024000" />
     </task>
     <servers />
   </component>

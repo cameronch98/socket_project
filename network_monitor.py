@@ -1,9 +1,7 @@
 import sys
-import keyboard
 from prompt_toolkit import prompt
 from prompt_toolkit.patch_stdout import patch_stdout
 from prompts import *
-# from rich import print
 from service_checks import *
 
 
@@ -134,7 +132,16 @@ def set_service_params(server_dict, server, service):
         interval = int(prompt("Test Interval (secs): "))
 
         # Add service to dict
-        server_dict[server][service] = {'host': server, 'interval': interval}
+        server_dict[server][service] = {
+            'host': server,
+            'ttl': 64,
+            'timeout': 1,
+            'sequence_number': 1,
+            'max_hops': 30,
+            'pings_per_hops': 1,
+            'verbose': False,
+            'interval': interval
+        }
 
         # Inquire about optional params
         if prompt("\nWould you like to set optional parameters? (y/n): ") == 'y':
@@ -168,7 +175,7 @@ def set_service_params(server_dict, server, service):
         interval = int(prompt("Test Interval (secs): "))
 
         # Add service to dict
-        server_dict[server][service] = {'url': f"https://{url}", 'interval': interval}
+        server_dict[server][service] = {'url': f"https://{url}", 'timeout': 5, 'interval': interval}
 
         # Inquire about optional params
         if prompt("\nWould you like to set optional parameters? (y/n): ") == 'y':
@@ -211,20 +218,18 @@ def set_service_params(server_dict, server, service):
     # Get/set tcp or local tcp specific parameters
     elif service == "TCP" or service == "LOCAL TCP":
         print("\nPlease enter the requested parameters: ")
-        ip_address = prompt("IP Address: ")
         port = int(prompt("Target Port: "))
         interval = int(prompt("Test Interval (in seconds): "))
-        server_dict[server][service] = {'ip_address': ip_address, 'port': port, 'interval': interval}
+        server_dict[server][service] = {'port': port, 'interval': interval}
 
     # Get/set udp specific parameters
     elif service == "UDP":
         print("\nPlease enter the requested parameters: ")
-        ip_address = prompt("IP Address: ")
         port = int(prompt("Target Port: "))
         interval = int(prompt("Test Interval (in seconds): "))
 
         # Add service to dict
-        server_dict[server][service] = {'ip_address': ip_address, 'port': port, 'interval': interval}
+        server_dict[server][service] = {'port': port, 'timeout': 3, 'interval': interval}
 
         # Inquire about optional params
         if prompt("\nWould you like to set optional parameters? (y/n): ") == 'y':
@@ -244,15 +249,15 @@ def main() -> None:
     """
     # Get terminal size
     columns, lines = shutil.get_terminal_size()
-    print("\n")
+    print("")
 
     # Print project title
-    print("███╗   ██╗███████╗████████╗ ██████╗ █████╗ ███╗   ███╗".center(columns))
-    print("████╗  ██║██╔════╝╚══██╔══╝██╔════╝██╔══██╗████╗ ████║".center(columns))
-    print("██╔██╗ ██║█████╗     ██║   ██║     ███████║██╔████╔██║".center(columns))
-    print("██║╚██╗██║██╔══╝     ██║   ██║     ██╔══██║██║╚██╔╝██║".center(columns))
-    print("██║ ╚████║███████╗   ██║   ╚██████╗██║  ██║██║ ╚═╝ ██║".center(columns))
-    print(" ╚═╝  ╚═══╝╚══════╝   ╚═╝    ╚═════╝╚═╝  ╚═╝╚═╝     ╚═╝\n".center(columns))
+    print(r" _   _      _    ____                ".center(columns))
+    print(r"| \ | | ___| |_ / ___|__ _ _ __ ___  ".center(columns))
+    print(r"|  \| |/ _ \ __| |   / _` | '_ ` _ \ ".center(columns))
+    print(r"| |\  |  __/ |_| |__| (_| | | | | | |".center(columns))
+    print(r"|_| \_|\___|\__|\____\__,_|_| |_| |_|".center(columns))
+    print("")
     title_string = "Network Monitoring Tool"
     print(title_string.center(columns))
     author_string = "by Cameron Hester"
@@ -260,14 +265,14 @@ def main() -> None:
     print("\n")
 
     # Prompt user to start program
-    start_string = "Press any key to begin ..."
+    start_string = "Press enter to begin ..."
     print(start_string.center(columns))
 
     # Sleep to prevent auto enter
     time.sleep(1)
 
     # Start program upon keypress
-    if keyboard.read_key():
+    if prompt("") == "":
 
         # Clear terminal
         os.system('cls') if sys.platform.startswith('win') else os.system('clear')

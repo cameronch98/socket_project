@@ -2,6 +2,12 @@ import socket
 
 
 def tcp_server():
+    """
+    Local TCP echo server for use with network monitoring application and echo client. Will accept messages in the same
+    TCP connection until the "Goodbye" message is received. In the case of the included echo client, this will be done
+    via user input. In the case of the network monitoring application, this will be done automatically.
+    :return: None
+    """
     # Create IPv4 sock stream socket
     server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -23,16 +29,18 @@ def tcp_server():
 
             try:
                 # Receive messages until "Goodbye" received
-                echoing: bool = True
-                while echoing:
+                while True:
 
                     # Receive data from echo client
                     message = client_sock.recv(1024).decode()
-                    if message == "Goodbye":
-                        echoing = False
-                    elif message != "":
-                        print(f"Received message: {message}")
-                        client_sock.sendall(message.encode())
+                    if not message or message == "Goodbye":
+                        print(f"Goodbye message received. Closing connection with {client_address}...")
+                        break
+
+                    # Print the message and return to client
+                    print(f"Received echo request message: {message}")
+                    print(f"Sending back echo reply message: {message}")
+                    client_sock.sendall(message.encode())
 
             finally:
                 # Close client connection

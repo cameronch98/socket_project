@@ -1,1 +1,71 @@
-{"127.0.0.1": {"LOCAL TCP": {"ip_address": "127.0.0.1", "port": 12345, "interval": 50}}, "google.com": {"HTTP": {"url": "http://www.google.com", "interval": 50}}, "reddit.com": {"TCP": {"ip_address": "151.101.65.140", "port": 80, "interval": 50}, "UDP": {"ip_address": "151.101.65.140", "port": 53, "interval": 50, "timeout": 3}}, "time.apple.com": {"NTP": {"server": "time.apple.com", "interval": 50}}, "youtube.com": {"DNS": {"dns_server": "8.8.8.8", "query": "youtube.com", "record_types": ["A", "MX", "AAAA", "CNAME"], "interval": 50}, "TCP": {"ip_address": "142.251.46.206", "port": 80, "interval": 50}}, "eecs.oregonstate.edu": {"HTTP": {"url": "http://engineering.oregonstate.edu/EECS", "interval": 50}, "HTTPS": {"url": "https://engineering.oregonstate.edu/EECS", "interval": 50, "timeout": 5}}, "4.2.2.2": {"ICMP": {"host": "4.2.2.2", "interval": 50, "ttl": 64, "timeout": 1, "sequence_number": 1, "max_hops": 30, "pings_per_hop": 1, "verbose": false}}}
+{
+  "4.2.2.2": {
+    "ICMP": {
+      "host": "4.2.2.2",
+      "interval": 50,
+      "ttl": 64,
+      "timeout": 1,
+      "sequence_number": 1,
+      "max_hops": 30,
+      "pings_per_hop": 2,
+      "verbose": false
+    }
+  },
+  "eecs.oregonstate.edu": {
+    "HTTP": {
+      "url": "http://engineering.oregonstate.edu/EECS",
+      "interval": 50
+    },
+    "HTTPS": {
+      "url": "https://engineering.oregonstate.edu/EECS",
+      "interval": 50,
+      "timeout": 6
+    }
+  },
+  "time.apple.com": {
+    "NTP": {
+      "server": "time.apple.com",
+      "interval": 50
+    }
+  },
+  "youtube.com": {
+    "DNS": {
+      "dns_server": "8.8.8.8",
+      "query": "youtube.com",
+      "record_types": [
+        "A",
+        "MX",
+        "AAAA",
+        "CNAME"
+      ],
+      "interval": 50
+    },
+    "TCP": {
+      "port": 80,
+      "interval": 50
+    }
+  },
+  "127.0.0.1": {
+    "LOCAL TCP": {
+      "port": 12345,
+      "interval": 50
+    }
+  },
+  "google.com": {
+    "HTTP": {
+      "url": "http://www.google.com",
+      "interval": 50
+    }
+  },
+  "reddit.com": {
+    "TCP": {
+      "port": 80,
+      "interval": 50
+    },
+    "UDP": {
+      "port": 53,
+      "timeout": 3,
+      "interval": 50
+    }
+  }
+}

@@ -461,11 +461,10 @@ def local_tcp_echo(ip_address: str, port: int) -> (bool, str):
     Returns: None
 
     Description:
-    Checks the status of a specific TCP port on a given IP address. Then, sends message with a pair of random integers
-    from 1 to 100 for the server to perform addition on. The server should send the result back to the client, allowing
-    for easy verification of functionality.
+    Checks the status of a specific TCP port on a given IP address. Then, sends random number (1-3) of randomly
+    generated lorem ipsum sentences as echo request messages to the server. The server should send the sentences back
+    in echo reply messages for easy verification that the server is working properly.
     """
-
     try:
         # Create a socket object using the AF_INET address family (IPv4) and SOCK_STREAM socket type (TCP).
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -491,11 +490,10 @@ def local_tcp_echo(ip_address: str, port: int) -> (bool, str):
                 reply = s.recv(1024).decode()
                 print(f"Received echo reply message: {reply}")
 
-                # Short sleep
-                time.sleep(1)
-
             # Send termination message
+            print(f"\nSending termination message to {(ip_address, port)} ... ")
             s.sendall("Goodbye".encode())
+            print(f"Connection with {(ip_address, port)} is closed.")
 
     except socket.timeout:
         # Connection attempt took too long; port might be filtered or the server is slow to respond.
