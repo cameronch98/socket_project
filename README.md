@@ -6,6 +6,8 @@ A network monitoring tool for monitoring the status of user-entered servers. The
 
 ## Setup
 
+### MacOS/Linux
+
 First, clone the repository or download/extract the files. Then, it is recommended to go to the project directory and create a virtual environment as follows: 
 
 ```
@@ -35,6 +37,16 @@ sudo python3 network_monitor.py
 ```
 sudo <name-for-venv>/bin/python network_monitor.py
 ```
+
+### Windows
+
+The setup in windows is similar, but we must activate the venv in a different way in project directory:
+
+```
+env\Scripts\activate
+```
+
+Additionally, Windows does not appear to require the user to use a root access command like sudo to start the application, so the commands in the previous section can be used, just without "sudo".
 
 ## Usage
 
@@ -136,6 +148,6 @@ The echo server may be added via the add-server command and set to utilize the l
 - Adding more information to the list of services. All the details can be seen in the JSON file, service_checks.py, but more parameter details in the UI would likely be useful to the user.
     - Note: if the JSON file is cleared, make sure to start it with an empty dictionary for now. If not, an error will occur.
 - Adding some color to the program with rich or similar library.
-- Fix bug where user can add a new service in the edit-service page.
+- Fix bug where user can add a new service in the edit-service page. This issue also allows the user to attempt to delete a service that doesn't exist for the particular server, causing a dictionary keys error.
 - Adding new monitoring features as the quarter progresses ... 
 
