@@ -5,7 +5,35 @@ A network monitoring tool for monitoring the status of user-entered servers. The
 
 ## Setup
 
-Put set up here
+First, clone the repository or download/extract the files. Then, it is recommended to go to the project directory and create a virtual environment as follows: 
+
+'''
+python<version> -m venv <name-for-venv>
+'''
+
+Then, we need to activate the venv by running:
+
+'''
+source <name-for-venv>/bin/activate
+'''
+
+Now that the virtual environment is enabled in the terminal, we need to install the packages required by the program that reside in requirements.txt. To do so, we can run the following command:
+
+'''
+pip install -r requirements.txt
+'''
+
+Finally, to run the program, we can enter one of the following:
+
+'''
+sudo python network_monitor.py
+'''
+'''
+sudo python3 network_monitor.py
+'''
+'''
+sudo <name-for-venv>/bin/python network_monitor.py
+'''
 
 ## Usage
 
